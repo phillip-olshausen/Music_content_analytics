@@ -12,7 +12,7 @@ a large-scale Spotify track dataset (\~90k tracks).
 
 Rather than stopping at descriptive averages, the analysis transitions
 to **probability-based lift modeling**, estimating how audio features
-alter breakout likelihood relative to platform-wide baselines.
+alter breakout likelihood relative to platform-wide baselines. In this project we specifically look at "dancability" but the idea can be extended to other audio features.
 
 The core contribution is a shift from:
 
