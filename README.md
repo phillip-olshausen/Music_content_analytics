@@ -1,5 +1,5 @@
 
-# Spotify Content Analytics: Structural Drivers of Hit Probability
+# Music Content Analytics: Structural Drivers of Hit Probability
 
 ### SQL-First Product Analytics with Lift Modeling & Catalog Dynamics
 
