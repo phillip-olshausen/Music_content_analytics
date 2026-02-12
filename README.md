@@ -199,24 +199,7 @@ This finding has direct relevance for:
 -   Lift computed against true global baseline (3.48%)
 -   Clear separation between descriptive and probabilistic metrics
 
-------------------------------------------------------------------------
 
-## Why This Project Is Strong
-
-This project demonstrates:
-
--   SQL proficiency (windowing, binning, aggregation, conditional
-    probability)
--   Understanding of long-tail distributions
--   Ability to move beyond descriptive statistics
--   Application of lift modeling (common in growth/marketing analytics)
--   Clear communication of structural platform insights
-
-It reflects how product analytics teams evaluate:
-
--   Feature influence on success likelihood
--   Structural performance differences
--   Decision-relevant metrics rather than superficial averages
 
 ------------------------------------------------------------------------
 
