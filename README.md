@@ -106,7 +106,7 @@ phenomena.
 # 2️⃣ Average Popularity Across Danceability Deciles
 
 ![Average popularity by danceability
-deciles](Tableau/avg_popularity_danceability_deciles.png)
+deciles](Tableau/popularity_by_danceability_decile.png)
 
 ### Approach
 
@@ -125,7 +125,7 @@ This motivates probability-based analysis.
 # 3️⃣ Genre-Level Performance (Top 30, ≥100 Tracks)
 
 ![Average popularity by
-genre](Tableau/avg_popularity_genre_top30.png)
+genre](Tableau/genre_top30.png)
 
 ### Approach
 
@@ -145,7 +145,7 @@ the importance of feature-level analysis.
 # 4️⃣ Hit Probability Lift by Danceability Decile (Core Analysis)
 
 ![Hit probability lift by danceability
-decile](Tableau/hit_lift_danceability_decile.png)
+decile](Tableau/danceability_hit_lift.png)
 
 ### Why Lift?
 
