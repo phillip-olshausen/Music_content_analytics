@@ -106,7 +106,7 @@ phenomena.
 # 2️⃣ Average Popularity Across Danceability Deciles
 
 ![Average popularity by danceability
-deciles](Tableau/popularity_by_danceability_decile.png)
+deciles](Tableau/ popularity_by_danceability_decile1.png)
 
 ### Approach
 
