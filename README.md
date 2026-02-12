@@ -206,7 +206,7 @@ This finding has direct relevance for:
 ## Repository Structure
 
     python/
-      01_prepare_tracks_csv.ipynb
+      data_preprocessing.ipynb
 
     sql/
       00_schema.sql
