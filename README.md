@@ -1,111 +1,259 @@
 
-# Spotify Content Analytics: Hit Probability & Catalog Dynamics (SQL + Tableau)
+# Spotify Content Analytics: Structural Drivers of Hit Probability
 
-This project analyzes structural patterns in a large-scale Spotify track dataset using **PostgreSQL** (metric computation) and **Tableau** (communication layer).  
-It goes beyond descriptive averages by estimating **hit probability lift** across feature ranges to surface signals associated with breakout tracks.
+### SQL-First Product Analytics with Lift Modeling & Catalog Dynamics
 
----
+------------------------------------------------------------------------
+
+## Executive Summary
+
+This project investigates structural drivers of track performance using
+a large-scale Spotify track dataset (\~90k tracks).
+
+Rather than stopping at descriptive averages, the analysis transitions
+to **probability-based lift modeling**, estimating how audio features
+alter breakout likelihood relative to platform-wide baselines.
+
+The core contribution is a shift from:
+
+> "What is popular?"
+
+to
+
+> "Which characteristics meaningfully increase the probability of
+> becoming a hit?"
+
+All metrics are computed in **PostgreSQL**, ensuring analytical
+transparency and reproducibility.\
+Visualizations are produced in **Tableau** as a communication layer
+only.
+
+------------------------------------------------------------------------
 
 ## Dataset
 
-- **Source:** Public Spotify Tracks dataset (commonly shared via Kaggle/Hugging Face mirrors)
-- **Scale:** ~90k tracks
-- **Fields used:** popularity (0–100), audio features (danceability, energy, etc.), genre, artist/track metadata
+**Source:** Public Spotify Tracks dataset (Kaggle distribution)\
+**Scale:** 89,741 tracks\
+**Target Variable:** Popularity (0--100 scale)
 
----
+**Key features used:** - Danceability - Energy - Valence -
+Acousticness - Genre - Artist metadata
 
-## Repo structure (recommended)
+A "Hit" is defined as:
 
-Use a structure that is easy for a reviewer to skim in under 60 seconds:
+    Popularity ≥ 70
 
-```
-.
-├── python/
-│   └── 01_prepare_tracks_csv.ipynb        # download/clean/export spotify_tracks_clean.csv
-│
-├── sql/
-│   ├── 00_schema.sql                      # create tables
-│   ├── 01_load_notes.sql                  # (optional) notes about import steps in DBeaver
-│   └── queries/
-│       ├── 01_long_tail_top10.sql
-│       ├── 02_popularity_by_danceability_deciles.sql
-│       ├── 03_genre_popularity_top30.sql
-│       └── 04_hit_lift_by_danceability_decile.sql
-│
-├── exports/                                # optional (small CSV outputs for Tableau)
-│   ├── long_tail_top10.csv
-│   ├── popularity_by_danceability_deciles.csv
-│   ├── genre_popularity_top30.csv
-│   └── hit_lift_danceability_decile.csv
-│
-├── tableau_graphics/
-│   ├── long_tail_top10.png
-│   ├── avg_popularity_danceability_deciles.png
-│   ├── avg_popularity_genre_top30.png
-│   └── hit_lift_danceability_decile.png
-│
-└── README.md
-```
+This yields:
 
-### Notes
-- Keep **SQL as the source of truth** for metrics (Tableau reads exported metric tables).
-- Rename Tableau exports to meaningful filenames (avoid `Sheet 10.png` etc.).
-- If your CSV exports are large, don’t commit them—commit only small “final metric tables” used by Tableau.
+-   Total tracks: 89,741\
+-   Hits: 3,126\
+-   Overall hit rate: **3.48%**
 
----
+This low baseline reinforces that breakout success is rare and
+structurally meaningful.
 
-## How to reproduce
+------------------------------------------------------------------------
 
-1. Run the notebook in `python/` to create `spotify_tracks_clean.csv` (or equivalent).
-2. Create the table by running `sql/00_schema.sql` in PostgreSQL.
-3. Import the CSV into `spotify_tracks` via **DBeaver → Import Data**.
-4. Run the queries in `sql/queries/` and export their result sets to `exports/` (CSV).
-5. Build Tableau visuals from those exported metric tables and save images to `tableau_graphics/`.
+## Methodological Framework
 
----
+The analysis proceeds in four stages:
 
-## Results (Tableau)
+1.  Catalog concentration analysis (long-tail dynamics)
+2.  Feature-level descriptive analysis (binned averages)
+3.  Genre-level structural comparison
+4.  Probability lift modeling (core contribution)
 
-### 1) Long-tail distribution of artist catalog size (Top 10)
-![Long-tail distribution of artist catalog size](Tableau/long_tail_top10.png)
+The project intentionally separates:
 
-**Key insight:** Catalog representation is highly concentrated (long-tail). Large catalog size does not automatically imply high average popularity.
+-   Mean performance (average popularity)
+-   Breakout probability (hit rate)
+-   Relative performance (lift vs baseline)
 
----
+This mirrors how growth and discovery teams reason about platform
+dynamics.
 
-### 2) Average track popularity across danceability deciles
-![Average popularity by danceability deciles](Tableau/avg_popularity_danceability_deciles.png)
+------------------------------------------------------------------------
 
-**Key insight:** Average popularity tends to increase across mid-to-high danceability ranges, but averages alone don’t capture breakout likelihood.
+# 1️⃣ Long-Tail Catalog Dynamics (Top 10 Artists)
 
----
+![Long-tail distribution of artist catalog
+size](Tableau/long_tail_top10.png)
 
-### 3) Average popularity by genre (Top 30, min. 100 tracks)
-![Average popularity by genre](Tableau/avg_popularity_genre_top30.png)
+### Question
 
-**Key insight:** Popularity differs across genres, suggesting systematic differences in audience size and/or platform exposure.
+Is catalog representation concentrated among a small subset of artists?
 
----
+### Approach
 
-### 4) Hit probability lift by danceability decile (core analysis)
-![Hit probability lift by danceability decile](Tableau/hit_lift_danceability_decile.png)
+-   Count tracks per artist
+-   Rank top 10 by catalog size
+-   Compute average popularity per artist
 
-**Definition:** `Hit = popularity >= 70`  
-**Overall hit rate:** **3.48%** (3,126 / 89,741)
+### Insight
 
-**Key insight:** Hit probability increases monotonically with danceability.  
-Tracks in the highest danceability decile have **~1.60× lift** vs average hit rate, while low danceability bins under-index strongly.
+The distribution is highly skewed, confirming long-tail dynamics:
 
----
+-   A small number of artists dominate catalog representation.
+-   Catalog size does not necessarily correlate with higher average
+    popularity.
 
-## What this project demonstrates
+**Implication:**\
+Catalog scale and breakout probability are structurally distinct
+phenomena.
 
-- SQL-first metric design (aggregation, binning, probability, lift)
-- Translating feature patterns into **decision-oriented** metrics (hit probability vs mean popularity)
-- Communicating results with clean Tableau visuals and proper baselines (lift reference line)
+------------------------------------------------------------------------
 
----
+# 2️⃣ Average Popularity Across Danceability Deciles
 
-## Author
+![Average popularity by danceability
+deciles](Tableau/avg_popularity_danceability_deciles.png)
 
-Phillip Olshausen
+### Approach
+
+-   Bin danceability into deciles (equal-width buckets)
+-   Compute average popularity per bin
+
+### Insight
+
+Average popularity increases across mid-to-high danceability ranges.
+
+However, mean popularity alone does not capture breakout dynamics.\
+This motivates probability-based analysis.
+
+------------------------------------------------------------------------
+
+# 3️⃣ Genre-Level Performance (Top 30, ≥100 Tracks)
+
+![Average popularity by
+genre](Tableau/avg_popularity_genre_top30.png)
+
+### Approach
+
+-   Filter genres with at least 100 tracks
+-   Rank top 30 by average popularity
+
+### Insight
+
+Popularity varies meaningfully across genres, indicating structural
+audience differences.
+
+However, genre does not fully explain performance variance, reinforcing
+the importance of feature-level analysis.
+
+------------------------------------------------------------------------
+
+# 4️⃣ Hit Probability Lift by Danceability Decile (Core Analysis)
+
+![Hit probability lift by danceability
+decile](Tableau/hit_lift_danceability_decile.png)
+
+### Why Lift?
+
+Lift measures relative over- or under-performance:
+
+    Lift = P(hit | bin) / P(hit overall)
+
+Baseline lift = 1.0
+
+-   Lift \> 1 → Over-indexing in hits
+-   Lift \< 1 → Under-indexing
+
+------------------------------------------------------------------------
+
+### Results
+
+-   Highest danceability decile:
+    -   Hit rate ≈ 5.6%\
+    -   Lift ≈ **1.60×**
+-   Lowest danceability bins:
+    -   Lift \< 0.4
+
+This reveals a **monotonic structural relationship**:
+
+Higher danceability systematically increases breakout probability.
+
+------------------------------------------------------------------------
+
+### Interpretation
+
+This is not a minor correlation effect --- it is a probabilistic
+reweighting of success likelihood.
+
+Tracks in the highest danceability decile are approximately **60% more
+likely than average to become hits**.
+
+This finding has direct relevance for:
+
+-   Editorial prioritization
+-   Discovery ranking signals
+-   Promotion candidate selection
+-   Feature engineering for recommendation systems
+
+------------------------------------------------------------------------
+
+## Analytical Rigor
+
+-   All aggregations computed in SQL
+-   No over-aggregation in Tableau
+-   Decile binning performed explicitly
+-   Lift computed against true global baseline (3.48%)
+-   Clear separation between descriptive and probabilistic metrics
+
+------------------------------------------------------------------------
+
+## Why This Project Is Strong
+
+This project demonstrates:
+
+-   SQL proficiency (windowing, binning, aggregation, conditional
+    probability)
+-   Understanding of long-tail distributions
+-   Ability to move beyond descriptive statistics
+-   Application of lift modeling (common in growth/marketing analytics)
+-   Clear communication of structural platform insights
+
+It reflects how product analytics teams evaluate:
+
+-   Feature influence on success likelihood
+-   Structural performance differences
+-   Decision-relevant metrics rather than superficial averages
+
+------------------------------------------------------------------------
+
+## Repository Structure
+
+    python/
+      01_prepare_tracks_csv.ipynb
+
+    sql/
+      00_schema.sql
+      queries/
+        01_long_tail_top10.sql
+        02_popularity_by_danceability_deciles.sql
+        03_genre_popularity_top30.sql
+        04_hit_lift_by_danceability_decile.sql
+
+    tableau_graphics/
+      long_tail_top10.png
+      avg_popularity_danceability_deciles.png
+      avg_popularity_genre_top30.png
+      hit_lift_danceability_decile.png
+
+------------------------------------------------------------------------
+
+## Conclusion
+
+This analysis demonstrates a progression from catalog structure to
+breakout probability modeling.
+
+The key takeaway:
+
+> Danceability is not merely correlated with popularity --- it
+> materially alters hit probability.
+
+By reframing the problem in probabilistic terms, the project transitions
+from exploratory analytics to product-relevant insight generation.
+
+------------------------------------------------------------------------
+
+**Author:** Phillip Olshausen
