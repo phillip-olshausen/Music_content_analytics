@@ -209,18 +209,18 @@ This finding has direct relevance for:
       data_preprocessing.ipynb
 
     sql/
-      00_schema.sql
+      schema_Music_analytics.sql
       queries/
-        01_long_tail_top10.sql
-        02_popularity_by_danceability_deciles.sql
-        03_genre_popularity_top30.sql
-        04_hit_lift_by_danceability_decile.sql
+        long_tail.sql
+        popularity_vs_features.sql
+        genre_popularity.sql
+        hit_metrics.sql
 
     tableau_graphics/
       long_tail_top10.png
-      avg_popularity_danceability_deciles.png
-      avg_popularity_genre_top30.png
-      hit_lift_danceability_decile.png
+      popularity_by_danceability_decile.png
+      genre_top30.png
+      danceability_hit_lift.png
 
 ------------------------------------------------------------------------
 
